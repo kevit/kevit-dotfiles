@@ -1,0 +1,45 @@
+#!/bin/bash
+HOME=/home/kevit
+CHOOSE=$1
+
+function createlocalcopy {
+for i in `cat $HOME/.useme/filelist`; do 
+        cp $HOME/$i $HOME/.useme/backup/$i; 
+        cp $HOME/$i $HOME/.useme/public/$i;
+done
+}
+
+function initconfig {
+        cd $HOME/.useme/public;
+        svn up;
+        cp -R $HOME/.useme/public/* $HOME/
+}
+
+function svnupdate {
+	cd $HOME/.useme/public
+	svn up
+}
+
+function svncommit {
+	cd $HOME/.useme/public
+	svn ci
+}
+
+function helpme {
+echo "choose functions svnupdate svncommit initconfig createlocalcopy";
+}
+
+if [ "$CHOOSE" = '--help' ]; then
+                helpme
+elif [ "$CHOOSE" = 'createlocalcopy' ]; then
+createlocalcopy
+elif [ "$CHOOSE" = 'initconfig' ]; then
+initconfig
+elif [ "$CHOOSE" = 'svnupdate' ]; then
+svnupdate
+elif [ "$CHOOSE" = 'svncommit' ]; then
+svncommit
+else 
+echo "choose functions: svnupdate svncommit initconfig createlocalcopy";
+fi
+
