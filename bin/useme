@@ -2,6 +2,17 @@
 HOME=/home/kevit
 CHOOSE=$1
 
+function setup {
+mkdir -p $HOME/.useme/backup;
+mkdir $HOME/.useme/public;
+touch $HOME/.useme/filelist;
+}
+
+function backup {
+tar cvjf $HOME/.useme/backup/archive.tar.bz2 $HOME/bin $HOME/.useme;
+}
+
+
 function createlocalcopy {
 for i in `cat $HOME/.useme/filelist`; do 
         cp $HOME/$i $HOME/.useme/backup/$i; 
@@ -39,7 +50,9 @@ elif [ "$CHOOSE" = 'svnupdate' ]; then
 svnupdate
 elif [ "$CHOOSE" = 'svncommit' ]; then
 svncommit
+elif [ "$CHOOSE" = 'backup' ]; then
+backup        
 else 
-echo "choose functions: svnupdate svncommit initconfig createlocalcopy";
+echo "choose functions: svnupdate svncommit initconfig createlocalcopy backup";
 fi
 
