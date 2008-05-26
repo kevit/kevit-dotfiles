@@ -1,0 +1,43 @@
+#functions
+alias today 	"date '+%d%h%y'"
+alias mess 	'clear ; tail -f /var/log/messages'
+alias ff    	'find . -name $*'
+alias clean     'rm -f  *~'
+
+#safety
+alias rm 	'rm -i'
+alias cp 	'cp -i'
+alias mv 	'mv -i'
+
+#moving
+alias . 	'pwd'
+alias .. 	'cd ..'
+alias ../	'cd ../'
+alias ... 	'cd ../..'
+alias .../	'cd ../../'
+alias -		'cd -'
+alias /		'cd /'
+
+#compatible
+alias del   	'rm -i'
+alias cls   	'clear'
+
+#fix this to FreeBSD
+alias ls 	'ls --color'
+
+
+#needed software
+if ( -e `where less` ) then
+	alias more 	'less'
+endif
+
+if ( -e `where vim`) then
+	alias vi 	'vim'
+endif
+
+#reread source 
+alias src	'clear ; exec tcsh'
+
+# This is another way to get RFCs nicely. Just do "rfcget 1234" 
+# to get the appropriate RFC. Needs the ncftp package.
+alias rfcget 'ncftpget ftp://ftp.isi.edu/in-notes/rfc\!^.txt' 
