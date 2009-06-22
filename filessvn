@@ -1,0 +1,16 @@
+.filessvn
+.backup.sh
+.svnadd.sh
+.restore.sh
+.bootstrap.sh
+.bash_profile
+.profile
+.vim/
+.vimrc
+.zsh/
+.zshrc
+.cshrc
+.screenrc
+bin/apg
+bin/id3iconv
+bin/svndiff

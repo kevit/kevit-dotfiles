@@ -1,0 +1,2 @@
+#!/bin/bash
+dd if=/dev/urandom count=1 2>/dev/null|uuencode -m -|tr -dc A-Za-z0-9_|cut -b 18-25

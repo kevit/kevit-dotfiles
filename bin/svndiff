@@ -1,0 +1,13 @@
+#!/bin/sh
+PROGNAME=`basename $0`
+
+if [ $# != 1 ]
+then
+    echo "Usage: $PROGNAME <file>"
+    exit 2
+else
+    TEMP=/tmp/tmp.$$.`basename $1`
+    svn cat $1 > $TEMP
+    vimdiff $TEMP $1
+    rm -f $TEMP
+fi
