@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#ssh b35.nivalnetwork.com
+
+
+if [[  `ssh $1 'ls -lah $HOME/.zshrc'>/dev/null;echo $?` != 0 ]] ; then
+#   scp $HOME/.zshrc $1:
+#   scp $HOME/.profile $1:
+	scp $HOME/dotfiles.tar $1:
+	ssh $1 'tar xvf dotfiles.tar'
+
+fi
+
+ssh $1

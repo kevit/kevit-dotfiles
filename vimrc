@@ -1,3 +1,11 @@
+filetype plugin on
+set hidden
+let g:BASH_AuthorName   = 'Sergey Karatkevich'
+let g:BASH_AuthorRef    = 'kevit'
+let g:BASH_Email        = 'simarg@gmail.com'
+let g:BASH_Company      = 'together.by'
+
+let mapleader = ","
 syntax on
 
 map <F4> :Ex<cr>
@@ -5,6 +13,11 @@ map! ii <Esc>
 
 vmap <F4> <esc>:Ex<cr>i
 imap <F4> <esc>:Ex<cr>i
+
+let Tlist_Ctags_Cmd = "/opt/local/bin/ctags"
+let Tlist_WinWidth = 50
+map <F3> :TlistToggle<cr>
+
 
 set wildmenu
 set wcm=<Tab>
@@ -53,3 +66,15 @@ au BufNewFile,BufRead * let b:mtabaftersp=matchadd('ErrorMsg', '\v( +)\zs(\t+)',
 "folding comments
 set fdm=expr
 set fde=getline(v:lnum)=~'^\\s*#'?1:getline(prevnonblank(v:lnum))=~'^\\s*#'?1:getline(nextnonblank(v:lnum))=~'^\\s*#'?1:0
+
+
+if has("gui_running")
+  set fuoptions=maxvert,maxhorz
+colorscheme desert
+set guifont=Monaco:h13
+set guioptions-=T
+" ⌘⇧F to fullscreen/other
+"  au GUIEnter * set fullscreen
+endif
+" hook to auto-chmod shell script
+"au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent !chmod a+x <afile> | endif | endif

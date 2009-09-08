@@ -5,8 +5,10 @@
 .bootstrap.sh
 .bash_profile
 .profile
+.ctags
 .vim/
 .vimrc
+.zlogin
 .zsh/
 .zshrc
 .cshrc
@@ -14,3 +16,4 @@
 bin/apg
 bin/id3iconv
 bin/svndiff
+bin/ssh-wrapper

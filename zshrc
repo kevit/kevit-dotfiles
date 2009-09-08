@@ -1,6 +1,56 @@
-alias tigertun="ssh -D 9999 86.57.250.204"
+bindkey -v 
+export PAGER=$HOME/bin/vimpager
+
+autoload colors ; colors
+
+function change_PS () {
+PS1="%n@%m-%~ "
+#screen)
+if [[ $TERM = 'screen' ]] then
+	PS1=$fg[yellow]screen:$fg[white]$PS1
+fi
+#ssh)
+if [[ -n $SSH_CLIENT || -n $REMOTEHOST ]] then
+	PS1="$fg[red]ssh:$fg[white]$PS1"
+fi
+#sudo)
+if [[ -n $SUDO_USER ]] then
+	PS1="$PS1$fg[red]# "
+fi
+#chrooted)
+
+#jailed)
+
+#root)
+if [[ $USER = 'root' ]] then
+	PS1="$PS1$fg[red]# $fg[white]"
+fi
+
+if [[ -d .svn ]]; then
+fi
+
+}
+
+#autoattach screen
+#if [[ $STY = '' ]] then screen -xR; fi
+
+#%n - user
+#%m - hostname
+#%~ - path
+export LANG="en_EN.UTF8"
+function zle-line-init zle-keymap-select {
+	RPS1="${${KEYMAP/vicmd/-- NORMAL --}/{main|viins)/-- INSERT --}"
+	RPS2=$RPS1
+	zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select	
+
+#alias tigertun="ssh -D 9999 86.57.250.204"
 alias writelog="osascript ~/bin/JournalLogger162.scpt"
 alias worklog=writelog
+alias ctags="/opt/local/bin/ctags"
+alias ssh="$HOME/bin/ssh-wrapper"
 #not work`
 #alias -g nocom="grep -v ^# |sed '/^$/d'"
 autoload -U compinit
@@ -34,8 +84,10 @@ zstyle ':completion:*' list-colors $LS_COLORS
 Darwin)
 alias ls="ls -G"
 alias grep="grep --color=auto"
-export PATH=$PATH:/sw/bin:/sw/sbin:/usr/local/magicwrap/bin
+export PATH=$PATH:/sw/bin:/sw/sbin:/usr/local/magicwrap/bin:/opt/local/bin:/opt/local/sbin
+export MANPATH=$MANPATH:/opt/local/share/man
 #LSCOLORS
+source $HOME/.zsh/zshrc.Darwin
 ;;
 esac
 
@@ -80,11 +132,23 @@ src ()
 	source ~/.zshrc
 }
 
-pull-dotfiles-from () {
-  [ -z $1 ] \
-    && echo -e "Usage:\n    $FUNCNAME [user@]hostname [ssh-args]" \
-    || ( scp $2 $1:'$HOME/.{zshrc,vimrc,screenrc}' $HOME );
+renew () {
+	rm $HOME/.zshrc
 }
+
+#pull-dotfiles-from () {
+#  [ -z $1 ] \
+#    && echo -e "Usage:\n    $FUNCNAME [user@]hostname [ssh-args]" \
+#    || ( scp $2 $1:'$HOME/.{zshrc,vimrc,screenrc}' $HOME );
+#}
+
+pull-dotfiles () {
+	cd $HOME
+	rm dotfiles.tar
+	wget http://kevit.info/dotfiles.tar
+	tar xvf dotfiles.tar
+}
+
 push-kevit-to () {
 cat ~/bin/init_kevit.sh | ssh $1 'sh -' 
 }
@@ -212,3 +276,59 @@ status() {
 testwww() {
 curl -o /dev/null -s -w %{time_connect}:%{time_starttransfer}:%{time_total} $1
 }
+
+function range2cidr () {
+    if [[ $# == 3 && $2 == "-" ]]; then
+        perl -MNet::CIDR::Lite -le '$cidr = Net::CIDR::Lite->new(@ARGV); print join "\n",$cidr->list' $1-$3
+    else
+        perl -MNet::CIDR::Lite -le '$cidr = Net::CIDR::Lite->new(@ARGV); print join "\n",$cidr->list' $1
+    fi
+
+    return $!
+}
+
+function cidr2rande () {
+	perl -MNet::CIDR -le 'print Net::CIDR::cidr2range("@ARGV")'
+}
+
+#print join("\n", Net::CIDR::cidr2range("192.68.0.0/16")) . "\n";
+#print Net::CIDR::addrandmask2cidr("195.149.50.61", "255.255.255.248")."\n";
+# 
+#   @list = Net::CIDR::addr2cidr("192.68.0.31");
+#    print join("\n", @list);
+
+
+function host2block () {
+   local i body="$( whois $1 )"
+
+   local ret=$( print "$body" | awk "/^ +Netblock:/ { print \$2 }" )
+
+   if [[ -n $ret ]]; then
+        print $ret
+        return
+   fi
+
+   for i in ${(f)"$( print "$body" | awk '/^inetnum:/ { print $2,"-",$4 }')"}; do
+        range2cidr "$i"
+   done
+
+   [[ -n $i ]] && return
+
+   print "$body"
+
+   return
+}
+
+
+
+
+
+# before running command
+# preexec() { }
+
+# before showing prompt
+precmd() {
+change_PS
+
+}
+
