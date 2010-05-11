@@ -1,0 +1,2 @@
+#!/bin/sh
+find /Users/kevit/Music -name '*.mp3' -exec java -jar /Users/kevit/bin/id3iconv-0.2.1.jar -e cp1251 {} \;
